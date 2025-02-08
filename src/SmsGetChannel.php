@@ -38,7 +38,7 @@ class SmsGetChannel
             $to = $this->formatGlobalPhoneNumber($phone);
         }
 
-        if (method_exists($notification, 'toSmsGet')) {
+        if (! method_exists($notification, 'toSmsGet')) {
             throw CouldNotSendNotification::invalidMessageObject();
         }
 

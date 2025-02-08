@@ -9,9 +9,9 @@ class CouldNotSendNotification extends \Exception
      *
      * @param mixed $response 服務端回應內容
      */
-    public static function serviceRespondedWithAnError($response): static
+    public static function serviceRespondedWithAnError(string $response): static
     {
-        return new static('發送通知時，服務端返回錯誤: ' . json_encode($response));
+        return new static('發送通知時，服務端返回錯誤: ' . $response);
     }
 
     /**

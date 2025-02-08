@@ -16,7 +16,7 @@ class SmsGetServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SmsGet::class, function ($app) {
             $username = $app['config']['services.sms-get.username'];
-            $password = $app['config']['services.sms-get.username'];
+            $password = $app['config']['services.sms-get.password'];
 
             if (empty($username) || empty($password)) {
                 throw new \InvalidArgumentException('Missing SmsGet config in services');
