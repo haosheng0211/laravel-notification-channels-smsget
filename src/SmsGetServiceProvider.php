@@ -3,6 +3,8 @@
 namespace NotificationChannels\SmsGet;
 
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Notifications\ChannelManager;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\ServiceProvider;
 
 class SmsGetServiceProvider extends ServiceProvider
@@ -12,13 +14,22 @@ class SmsGetServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->when(SmsGetChannel::class)
-            ->needs(SmsGet::class)
-            ->give(function () {
-                $config = config('services.smsget');
+        $this->app->singleton(SmsGet::class, function ($app) {
+            $username = $app['config']['services.sms-get.username'];
+            $password = $app['config']['services.sms-get.username'];
 
-                return new SmsGet(new GuzzleClient(), $config['username'], $config['password']);
+            if (empty($username) || empty($password)) {
+                throw new \InvalidArgumentException('Missing SmsGet config in services');
+            }
+
+            return new SmsGet(new GuzzleClient(), $username, $password);
+        });
+
+        Notification::resolved(function (ChannelManager $service) {
+            $service->extend('sms-get', function ($app) {
+                return new SmsGetChannel($app->make(SmsGet::class));
             });
+        });
     }
 
     /**
