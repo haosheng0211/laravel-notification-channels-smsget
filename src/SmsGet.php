@@ -19,7 +19,7 @@ class SmsGet
             'username' => $this->username,
             'password' => $this->password,
             'method'   => '1',
-            'sms_msg'  => urlencode($content),
+            'sms_msg'  => $content,
             'phone'    => $phone,
         ], $options);
 
